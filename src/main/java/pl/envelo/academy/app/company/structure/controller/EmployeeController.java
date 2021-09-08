@@ -14,6 +14,7 @@ import pl.envelo.academy.app.company.structure.model.EmployeeModel;
 import pl.envelo.academy.app.company.structure.service.EmployeeService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -28,8 +29,8 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<EmployeeModel> list(){
-        EmployeeModel employeeModels = employeeService.list();
-        return ResponseEntity.ok(employeeModels);
+        Optional<EmployeeModel> employeeModels = employeeService.list();
+        return ResponseEntity.ok(employeeModels.orElse(null));
     }
 
     @PostMapping

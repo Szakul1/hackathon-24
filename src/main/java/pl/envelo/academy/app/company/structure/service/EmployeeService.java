@@ -7,6 +7,7 @@ import pl.envelo.academy.app.company.structure.model.EmployeeModel;
 import pl.envelo.academy.app.company.structure.repository.EmployeeRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
@@ -19,12 +20,14 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public EmployeeModel list() {
+    public Optional<EmployeeModel> list() {
         List<EmployeeEntity> employeeEntities = employeeRepository.getBySupervisor(null);
+        if (employeeEntities.isEmpty())
+            return Optional.empty();
         EmployeeEntity bossEntity = employeeEntities.get(0);
         EmployeeModel bossModel = employeeMapper.toModel(bossEntity);
         addSubordinates(bossModel);
-        return bossModel;
+        return Optional.of(bossModel);
     }
 
     public EmployeeModel create(EmployeeModel employeeModel) {
