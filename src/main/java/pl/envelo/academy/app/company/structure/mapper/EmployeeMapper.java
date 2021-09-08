@@ -32,6 +32,8 @@ public class EmployeeMapper {
         employeeModel.setPhoneNumber(employeeEntity.getPhoneNumber());
         employeeModel.setDescription(employeeEntity.getDescription());
         employeeModel.setUrl(employeeEntity.getUrl());
+        if (employeeEntity.getSupervisor() != null)
+            employeeModel.setSupervisorId(employeeEntity.getSupervisor().getId());
         return employeeModel;
     }
 
