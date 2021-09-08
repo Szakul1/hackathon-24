@@ -21,7 +21,9 @@ public class EmployeeService {
 
     public List<EmployeeModel> list() {
         List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
-        return employeeMapper.toModel(employeeEntities);
+        List<EmployeeModel> employeeModels = employeeMapper.toModel(employeeEntities);
+        addSubordinates(employeeModels);
+        return employeeModels;
     }
 
     public EmployeeModel create(EmployeeModel employeeModel) {
@@ -50,11 +52,15 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
-    private void addSubordinates(EmployeeModel employeeEntity) {
-        // TODO
+    private void addSubordinates(EmployeeModel employeeModel) {
+        EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
+        List<EmployeeEntity> subordinatesEntity = employeeRepository.getBySupervisor(employeeEntity);
+        List<EmployeeModel> subordinatesModel = employeeMapper.toModel(subordinatesEntity);
+        addSubordinates(subordinatesModel);
+        employeeModel.setSubordinates(subordinatesModel);
     }
 
-    private void addSubordinates(List<EmployeeModel> entities) {
-        entities.forEach(this::addSubordinates);
+    private void addSubordinates(List<EmployeeModel> models) {
+        models.forEach(this::addSubordinates);
     }
 }

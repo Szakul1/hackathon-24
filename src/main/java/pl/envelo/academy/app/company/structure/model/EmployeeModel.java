@@ -9,21 +9,19 @@ public class EmployeeModel {
     private String email;
     private String phoneNumber;
     private String description;
-    private EmployeeModel supervisor;
     private List<EmployeeModel> subordinates;
     private String url;
 
     public EmployeeModel() {
     }
 
-    public EmployeeModel(Long id, String name, String lastName, String email, String phoneNumber, String description, EmployeeModel supervisior, List<EmployeeModel> subordinates, String url) {
+    public EmployeeModel(Long id, String name, String lastName, String email, String phoneNumber, String description, List<EmployeeModel> subordinates, String url) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.description = description;
-        this.supervisor = supervisior;
         this.subordinates = subordinates;
         this.url = url;
     }
@@ -74,14 +72,6 @@ public class EmployeeModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public EmployeeModel getSupervisor() {
-        return supervisor;
-    }
-
-    public void setSupervisor(EmployeeModel supervisor) {
-        this.supervisor = supervisor;
     }
 
     public List<EmployeeModel> getSubordinates() {
