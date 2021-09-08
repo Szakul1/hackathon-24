@@ -20,7 +20,7 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public Optional<EmployeeModel> list() {
+    public Optional<EmployeeModel> root() {
         List<EmployeeEntity> employeeEntities = employeeRepository.getBySupervisor(null);
         if (employeeEntities.isEmpty())
             return Optional.empty();
