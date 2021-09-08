@@ -26,28 +26,30 @@ public class EmployeeService {
             return Optional.empty();
         EmployeeEntity bossEntity = employeeEntities.get(0);
         EmployeeModel bossModel = employeeMapper.toModel(bossEntity);
-        addSubordinates(bossModel);
+        updateSubordinates(bossModel);
         return Optional.of(bossModel);
     }
 
     public EmployeeModel create(EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
+        updateSupervisor(employeeEntity, employeeModel.getSupervisorId());
         EmployeeEntity created = employeeRepository.save(employeeEntity);
         EmployeeModel model = employeeMapper.toModel(created);
-        addSubordinates(model);
+        updateSubordinates(model);
         return model;
     }
 
     public EmployeeModel read(Long id) {
         EmployeeEntity read = employeeRepository.getById(id);
         EmployeeModel model = employeeMapper.toModel(read);
-        addSubordinates(model);
+        updateSubordinates(model);
         return model;
     }
 
     public EmployeeModel update(Long id, EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
         employeeEntity.setId(id);
+        updateSupervisor(employeeEntity, employeeModel.getSupervisorId());
         EmployeeEntity saved = employeeRepository.save(employeeEntity);
         return employeeMapper.toModel(saved);
     }
@@ -56,15 +58,20 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
-    private void addSubordinates(EmployeeModel employeeModel) {
+    private void updateSubordinates(EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
         List<EmployeeEntity> subordinatesEntity = employeeRepository.getBySupervisor(employeeEntity);
         List<EmployeeModel> subordinatesModel = employeeMapper.toModel(subordinatesEntity);
-        addSubordinates(subordinatesModel);
+        updateSubordinates(subordinatesModel);
         employeeModel.setSubordinates(subordinatesModel);
     }
 
-    private void addSubordinates(List<EmployeeModel> models) {
-        models.forEach(this::addSubordinates);
+    private void updateSupervisor(EmployeeEntity employeeEntity, Long supervisorId){
+        EmployeeEntity supervisor = employeeRepository.getById(supervisorId);
+        employeeEntity.setSupervisor(supervisor);
+    }
+
+    private void updateSubordinates(List<EmployeeModel> models) {
+        models.forEach(this::updateSubordinates);
     }
 }
