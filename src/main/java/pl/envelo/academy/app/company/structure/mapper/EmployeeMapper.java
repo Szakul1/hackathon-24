@@ -20,9 +20,6 @@ public class EmployeeMapper {
         employeeEntity.setPhoneNumber(employeeModel.getPhoneNumber());
         employeeEntity.setDescription(employeeModel.getDescription());
         employeeEntity.setUrl(employeeModel.getUrl());
-        if (employeeModel.getSupervisor() != null) // TODO change
-            employeeEntity.setSupervisor(toEntity(employeeModel.getSupervisor()));
-
         return employeeEntity;
     }
 
@@ -35,9 +32,6 @@ public class EmployeeMapper {
         employeeModel.setPhoneNumber(employeeEntity.getPhoneNumber());
         employeeModel.setDescription(employeeEntity.getDescription());
         employeeModel.setUrl(employeeEntity.getUrl());
-        if (employeeEntity.getSupervisor() != null) // TODO change
-            employeeModel.setSupervisor(toModel(employeeEntity.getSupervisor()));
-
         return employeeModel;
     }
 
