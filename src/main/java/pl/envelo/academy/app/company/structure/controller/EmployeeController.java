@@ -27,8 +27,8 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeModel>> list(){
-        List<EmployeeModel> employeeModels = employeeService.list();
+    public ResponseEntity<EmployeeModel> list(){
+        EmployeeModel employeeModels = employeeService.list();
         return ResponseEntity.ok(employeeModels);
     }
 
