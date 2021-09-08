@@ -19,11 +19,12 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<EmployeeModel> list() {
-        List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
-        List<EmployeeModel> employeeModels = employeeMapper.toModel(employeeEntities);
-        addSubordinates(employeeModels);
-        return employeeModels;
+    public EmployeeModel list() {
+        List<EmployeeEntity> employeeEntities = employeeRepository.getBySupervisor(null);
+        EmployeeEntity bossEntity = employeeEntities.get(0);
+        EmployeeModel bossModel = employeeMapper.toModel(bossEntity);
+        addSubordinates(bossModel);
+        return bossModel;
     }
 
     public EmployeeModel create(EmployeeModel employeeModel) {
