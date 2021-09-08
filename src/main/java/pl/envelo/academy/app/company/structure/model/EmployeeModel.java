@@ -10,12 +10,13 @@ public class EmployeeModel {
     private String phoneNumber;
     private String description;
     private List<EmployeeModel> subordinates;
+    private Long supervisorId;
     private String url;
 
     public EmployeeModel() {
     }
 
-    public EmployeeModel(Long id, String name, String lastName, String email, String phoneNumber, String description, List<EmployeeModel> subordinates, String url) {
+    public EmployeeModel(Long id, String name, String lastName, String email, String phoneNumber, String description, List<EmployeeModel> subordinates, Long supervisorId, String url) {
         this.id = id;
         this.name = name;
         this.lastName = lastName;
@@ -23,6 +24,7 @@ public class EmployeeModel {
         this.phoneNumber = phoneNumber;
         this.description = description;
         this.subordinates = subordinates;
+        this.supervisorId = supervisorId;
         this.url = url;
     }
 
@@ -93,13 +95,23 @@ public class EmployeeModel {
     @Override
     public String toString() {
         return "EmployeeModel{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", description='" + description + '\'' +
                 ", subordinates=" + subordinates +
+                ", supervisorId=" + supervisorId +
                 ", url='" + url + '\'' +
                 '}';
+    }
+
+    public Long getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Long supervisorId) {
+        this.supervisorId = supervisorId;
     }
 }
