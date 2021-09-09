@@ -84,8 +84,8 @@ public class EmployeeService {
     }
 
     private void updateSupervisor(EmployeeEntity employeeEntity, Long supervisorId) {
-        EmployeeEntity supervisor = employeeRepository.getById(supervisorId);
-        employeeEntity.setSupervisor(supervisor);
+        Optional<EmployeeEntity> supervisor = employeeRepository.findById(supervisorId);
+        employeeEntity.setSupervisor(supervisor.get());
     }
 
     private void updateSubordinates(List<EmployeeModel> models) {
