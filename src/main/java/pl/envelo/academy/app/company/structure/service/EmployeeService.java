@@ -37,7 +37,8 @@ public class EmployeeService {
 
     public Optional<EmployeeModel> create(EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
-        updateSupervisor(employeeEntity, employeeModel.getSupervisorId());
+        if (employeeModel.getSupervisorId() != null)
+            updateSupervisor(employeeEntity, employeeModel.getSupervisorId());
         try {
             EmployeeEntity created = employeeRepository.save(employeeEntity);
             EmployeeModel model = employeeMapper.toModel(created);
