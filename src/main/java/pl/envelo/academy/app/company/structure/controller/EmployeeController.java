@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.envelo.academy.app.company.structure.model.EmployeeModel;
 import pl.envelo.academy.app.company.structure.service.CSVService;
 import pl.envelo.academy.app.company.structure.service.EmployeeService;
+import pl.envelo.academy.app.company.structure.service.JSONService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,10 +27,12 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final CSVService csvService;
+    private final JSONService jsonService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
         this.csvService = new CSVService(employeeService);
+        this.jsonService = new JSONService(employeeService);
     }
 
     @GetMapping
@@ -61,6 +64,16 @@ public class EmployeeController {
         response.setHeader("Content-Disposition", "attachment; filename=employees.csv");
         try (PrintWriter writer = response.getWriter()){
             csvService.getFile(writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping(value = "/export/json", produces = "application/json")
+    public void exportToJSON(HttpServletResponse response){
+        response.setHeader("Content-Disposition", "attachment; filename=employees.json");
+        try (PrintWriter writer = response.getWriter()){
+            jsonService.getFile(writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
