@@ -21,7 +21,7 @@ public class EmployeeService {
     }
 
     public Optional<EmployeeModel> root() {
-        List<EmployeeEntity> employeeEntities = employeeRepository.getBySupervisor(null);
+        List<EmployeeEntity> employeeEntities = employeeRepository.findBySupervisor(null);
         if (employeeEntities.isEmpty())
             return Optional.empty();
         EmployeeEntity bossEntity = employeeEntities.get(0);
@@ -35,28 +35,40 @@ public class EmployeeService {
         return employeeMapper.toModel(employeeEntities);
     }
 
-    public EmployeeModel create(EmployeeModel employeeModel) {
+    public Optional<EmployeeModel> create(EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
         updateSupervisor(employeeEntity, employeeModel.getSupervisorId());
-        EmployeeEntity created = employeeRepository.save(employeeEntity);
-        EmployeeModel model = employeeMapper.toModel(created);
-        updateSubordinates(model);
-        return model;
+        try {
+            EmployeeEntity created = employeeRepository.save(employeeEntity);
+            EmployeeModel model = employeeMapper.toModel(created);
+            updateSubordinates(model);
+            return Optional.of(model);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
-    public EmployeeModel read(Long id) {
-        EmployeeEntity read = employeeRepository.getById(id);
-        EmployeeModel model = employeeMapper.toModel(read);
-        updateSubordinates(model);
-        return model;
+    public Optional<EmployeeModel> read(Long id) {
+        Optional<EmployeeEntity> read = employeeRepository.findById(id);
+        if (read.isPresent()) {
+            EmployeeModel model = employeeMapper.toModel(read.get());
+            updateSubordinates(model);
+            return Optional.of(model);
+        }
+        return Optional.empty();
     }
 
-    public EmployeeModel update(Long id, EmployeeModel employeeModel) {
+    public Optional<EmployeeModel> update(Long id, EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
         employeeEntity.setId(id);
         updateSupervisor(employeeEntity, employeeModel.getSupervisorId());
-        EmployeeEntity saved = employeeRepository.save(employeeEntity);
-        return employeeMapper.toModel(saved);
+        try {
+            EmployeeEntity saved = employeeRepository.save(employeeEntity);
+            EmployeeModel model = employeeMapper.toModel(saved);
+            return Optional.of(model);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
     }
 
     public void delete(Long id) {
@@ -65,7 +77,7 @@ public class EmployeeService {
 
     private void updateSubordinates(EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
-        List<EmployeeEntity> subordinatesEntity = employeeRepository.getBySupervisor(employeeEntity);
+        List<EmployeeEntity> subordinatesEntity = employeeRepository.findBySupervisor(employeeEntity);
         List<EmployeeModel> subordinatesModel = employeeMapper.toModel(subordinatesEntity);
         updateSubordinates(subordinatesModel);
         employeeModel.setSubordinates(subordinatesModel);
