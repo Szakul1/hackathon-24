@@ -14,7 +14,9 @@ import pl.envelo.academy.app.company.structure.model.EmployeeModel;
 import pl.envelo.academy.app.company.structure.service.CSVService;
 import pl.envelo.academy.app.company.structure.service.EmployeeService;
 import pl.envelo.academy.app.company.structure.service.JSONService;
+import pl.envelo.academy.app.company.structure.service.PDFService;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,11 +30,13 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final CSVService csvService;
     private final JSONService jsonService;
+    private final PDFService pdfService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
         this.csvService = new CSVService(employeeService);
         this.jsonService = new JSONService(employeeService);
+        this.pdfService = new PDFService(employeeService);
     }
 
     @GetMapping
@@ -75,6 +79,17 @@ public class EmployeeController {
         try (PrintWriter writer = response.getWriter()){
             jsonService.getFile(writer);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping(value = "/export/pdf", produces = "application/pdf")
+    public void exportToPDF(HttpServletResponse response){
+        response.setHeader("Content-Disposition", "attachment; filename=employees.pdf");
+        try (ServletOutputStream outputStream = response.getOutputStream()){
+            pdfService.getFile(outputStream);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
