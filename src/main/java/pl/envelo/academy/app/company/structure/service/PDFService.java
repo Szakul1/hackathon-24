@@ -79,7 +79,7 @@ public class PDFService {
             table.addCell(employeeModel.getPhoneNumber());
             if (employeeModel.getSupervisorId() != null) {
                 EmployeeModel supervisor = employeeService.read(employeeModel.getSupervisorId()).get();
-                table.addCell(supervisor.getName() + " " + supervisor.getLastName());
+                table.addCell(supervisor.getName() + " " + (supervisor.getLastName() == null ? "": supervisor.getLastName()));
             } else {
                 table.addCell("--BOSS--");
             }
