@@ -10,7 +10,7 @@ import java.io.Writer;
 import java.util.List;
 
 public class CSVService {
-    private EmployeeService service;
+    private final EmployeeService service;
 
     public CSVService(EmployeeService service) {
         this.service = service;
