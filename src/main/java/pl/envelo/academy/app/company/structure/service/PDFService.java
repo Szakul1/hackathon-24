@@ -74,7 +74,7 @@ public class PDFService {
     private void writeTableData(PdfPTable table) {
         List<EmployeeModel> employeeModels = employeeService.list();
         for (EmployeeModel employeeModel : employeeModels) {
-            table.addCell(employeeModel.getName() + " " + employeeModel.getLastName());
+            table.addCell(employeeModel.getName() + " " + (employeeModel.getLastName() == null ? "": employeeModel.getLastName()));
             table.addCell(employeeModel.getEmail());
             table.addCell(employeeModel.getPhoneNumber());
             if (employeeModel.getSupervisorId() != null) {
