@@ -30,6 +30,11 @@ public class EmployeeService {
         return Optional.of(bossModel);
     }
 
+    public List<EmployeeModel> list() {
+        List<EmployeeEntity> employeeEntities = employeeRepository.findAll();
+        return employeeMapper.toModel(employeeEntities);
+    }
+
     public EmployeeModel create(EmployeeModel employeeModel) {
         EmployeeEntity employeeEntity = employeeMapper.toEntity(employeeModel);
         updateSupervisor(employeeEntity, employeeModel.getSupervisorId());
@@ -66,7 +71,7 @@ public class EmployeeService {
         employeeModel.setSubordinates(subordinatesModel);
     }
 
-    private void updateSupervisor(EmployeeEntity employeeEntity, Long supervisorId){
+    private void updateSupervisor(EmployeeEntity employeeEntity, Long supervisorId) {
         EmployeeEntity supervisor = employeeRepository.getById(supervisorId);
         employeeEntity.setSupervisor(supervisor);
     }

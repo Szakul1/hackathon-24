@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.envelo.academy.app.company.structure.model.EmployeeModel;
+import pl.envelo.academy.app.company.structure.service.CSVService;
 import pl.envelo.academy.app.company.structure.service.EmployeeService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Optional;
 
 @RestController
@@ -21,25 +25,27 @@ import java.util.Optional;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final CSVService csvService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
+        this.csvService = new CSVService(employeeService);
     }
 
     @GetMapping
-    public ResponseEntity<EmployeeModel> root(){
+    public ResponseEntity<EmployeeModel> root() {
         Optional<EmployeeModel> employeeModels = employeeService.root();
         return ResponseEntity.of(employeeModels);
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeModel> create(@RequestBody EmployeeModel employee){
+    public ResponseEntity<EmployeeModel> create(@RequestBody EmployeeModel employee) {
         EmployeeModel created = employeeService.create(employee);
         return ResponseEntity.ok(created);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<EmployeeModel> read(@PathVariable Long id){
+    public ResponseEntity<EmployeeModel> read(@PathVariable Long id) {
         EmployeeModel read = employeeService.read(id);
         return ResponseEntity.ok(read);
     }
@@ -50,8 +56,18 @@ public class EmployeeController {
         return ResponseEntity.ok(update);
     }
 
+    @GetMapping(value = "/export/csv", produces = "text/csv; charset=utf-8")
+    public void exportToCSV(HttpServletResponse response) {
+        response.setHeader("Content-Disposition", "attachment; filename=employees.csv");
+        try (PrintWriter writer = response.getWriter()){
+            csvService.getFile(writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         employeeService.delete(id);
     }
 }
