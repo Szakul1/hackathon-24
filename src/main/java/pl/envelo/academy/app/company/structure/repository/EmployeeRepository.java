@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
-    List<EmployeeEntity> getBySupervisor(EmployeeEntity supervisor);
+    List<EmployeeEntity> findBySupervisor(EmployeeEntity supervisor);
 }

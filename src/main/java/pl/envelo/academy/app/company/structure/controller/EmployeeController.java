@@ -47,20 +47,20 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<EmployeeModel> create(@RequestBody EmployeeModel employee) {
-        EmployeeModel created = employeeService.create(employee);
-        return ResponseEntity.ok(created);
+        Optional<EmployeeModel> created = employeeService.create(employee);
+        return ResponseEntity.of(created);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<EmployeeModel> read(@PathVariable Long id) {
-        EmployeeModel read = employeeService.read(id);
-        return ResponseEntity.ok(read);
+        Optional<EmployeeModel> read = employeeService.read(id);
+        return ResponseEntity.of(read);
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<EmployeeModel> update(@PathVariable Long id, @RequestBody EmployeeModel employee) {
-        EmployeeModel update = employeeService.update(id, employee);
-        return ResponseEntity.ok(update);
+        Optional<EmployeeModel> update = employeeService.update(id, employee);
+        return ResponseEntity.of(update);
     }
 
     @GetMapping(value = "/export/csv", produces = "text/csv; charset=utf-8")
